@@ -9,6 +9,10 @@ readme = "README.md"
 python = "^3.12"
 flask = "^3.0.3"
 pytest = "^8.3.2"
+flask-sqlalchemy = "^3.1.1"
+environs = "^11.0.0"
+sqlalchemy = "^2.0.32"
+flask-wtf = "^1.2.1"
 
 
 [build-system]
