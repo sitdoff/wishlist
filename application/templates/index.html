@@ -11,32 +11,36 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">URL</th>
-                            <th scope="col" class="text-center">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items %}
+                {% if items %}
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.price }}</td>
-                                <td>{{ item.description }}</td>
-                                <td>
-                                    <a href="{{ item.url }}">Link</a>
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ url_for('wishlist.remove', id=item.id) }}">X</a>
-                                </td>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">URL</th>
+                                <th scope="col" class="text-center">Delete</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                                <tr>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.description }}</td>
+                                    <td>
+                                        <a href="{{ item.url }}">Link</a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ url_for('wishlist.remove', id=item.id) }}">X</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <h3 class="text-center">No items</h3>
+                {% endif %}
             </div>
         </div>
     </div>
