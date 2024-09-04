@@ -14,7 +14,6 @@ def main():
         .scalars()
         .all()
     )
-    print(items)
     return render_template("index.html", items=items)
 
 
