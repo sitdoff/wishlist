@@ -10,3 +10,6 @@ class ItemModel(db.Model):
     url: Mapped[str] = mapped_column()
     price: Mapped[str] = mapped_column()
     description: Mapped[str] = mapped_column()
+
+    def __repr__(self):
+        return f"<ItemModel({self.id=} - {self.name=} - {self.price=})>"
