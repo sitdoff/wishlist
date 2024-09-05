@@ -2,7 +2,8 @@ from flask import Blueprint, redirect, render_template, request, url_for
 
 from application.forms.forms import ItemForm
 
-from .models import ItemModel, db
+from ..db import db
+from .models import ItemModel
 
 bp = Blueprint("wishlist", __name__, url_prefix="/wishlist")
 
