@@ -20,9 +20,6 @@ def register():
 
     if form.validate_on_submit():
 
-        print("Email:", form.email.data)
-        print("Password:", form.password1.data)
-
         try:
             user = UserModel(
                 email=form.email.data,
