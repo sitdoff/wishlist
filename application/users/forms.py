@@ -15,3 +15,8 @@ class RegisterForm(FlaskForm):
             self.password2.errors.append("Passwords must match")
             return False
         return True
+
+
+class LoginForm(FlaskForm):
+    email = EmailField("Email", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
