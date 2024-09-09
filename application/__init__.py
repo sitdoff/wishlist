@@ -1,10 +1,12 @@
 from environs import Env
 from flask import Flask, redirect, render_template, url_for
 from flask.logging import create_logger
+from flask_login import LoginManager
 from flask_migrate import Migrate
 
 from .db import db
 from .users import users
+from .users.models import UserModel
 from .wishlist import wishlist
 
 env = Env()
@@ -21,6 +23,14 @@ def create_app():
     db.init_app(app)
 
     migrate = Migrate(app, db)
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = "users.login"
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return UserModel.query.get(user_id)
 
     return app
 
