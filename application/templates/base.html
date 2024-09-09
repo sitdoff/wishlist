@@ -27,9 +27,27 @@
                     <li class="nav-item">
                         <a href="{{ url_for("wishlist.add") }}" class="nav-link">Add</a>
                     </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{{ url_for("users.logout") }}" class="nav-link">Logout({{ current_user.email }})</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{{ url_for("users.login") }}"
+                               class="nav-link"
+                               aria-current="page">Login</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </header>
         </div>
+        {% block flash %}
+            <div class="container">
+                {% for category, message in get_flashed_messages(with_categories=True) %}
+                    <div class="{{ category }} mb-3" role="alert">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endblock flash %}
         {% block content %}
             Контент
         {% endblock content %}
