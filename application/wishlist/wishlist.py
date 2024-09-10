@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, url_for
-from flask_login import current_user
+from flask_login import current_user, login_required
 from sqlalchemy import desc
 
 from application.forms.forms import ItemForm
@@ -11,6 +11,7 @@ bp = Blueprint("wishlist", __name__, url_prefix="/wishlist")
 
 
 @bp.route("/")
+@login_required
 def main():
     items = (
         db.session.execute(
@@ -25,6 +26,7 @@ def main():
 
 
 @bp.route("/add/", methods=["GET", "POST"])
+@login_required
 def add():
     if request.method == "POST":
         item = ItemModel(
@@ -41,6 +43,7 @@ def add():
 
 
 @bp.route("remove/<int:id>/", methods=["GET"])
+@login_required
 def remove(id):
     db.session.execute(db.delete(ItemModel).where(ItemModel.id == id))
     db.session.commit()
