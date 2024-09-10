@@ -16,31 +16,37 @@
               href="{{ url_for('static', filename='css/style.css') }}">
     </head>
     <body>
-        <div class="container">
-            <header class="d-flex justify-content-center py-3">
-                <ul class="nav nav-pills">
-                    <li class="nav-item">
-                        <a href="{{ url_for("wishlist.main") }}"
-                           class="nav-link"
-                           aria-current="page">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url_for("wishlist.add") }}" class="nav-link">Add</a>
-                    </li>
-                    {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a href="{{ url_for("users.logout") }}" class="nav-link">Logout({{ current_user.email }})</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a href="{{ url_for("users.login") }}"
-                               class="nav-link"
-                               aria-current="page">Login</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </header>
-        </div>
+        <!-- <div class="container"> -->
+        <!--     <header class="d-flex justify-content-center py-3"> -->
+        <!--         <ul class="nav nav-pills"> -->
+        <!--             <li class="nav-item"> -->
+        <!--                 <a href="{{ url_for("wishlist.main") }}" -->
+        <!--                    class="nav-link" -->
+        <!--                    aria-current="page">Home</a> -->
+        <!--             </li> -->
+        <!--             <li class="nav-item"> -->
+        <!--                 <a href="{{ url_for("wishlist.add") }}" class="nav-link">Add</a> -->
+        <!--             </li> -->
+        <!--             {% if current_user.is_authenticated %} -->
+        <!--                 <li class="nav-item"> -->
+        <!--                     <a href="{{ url_for("users.logout") }}" class="nav-link">Logout({{ current_user.email }})</a> -->
+        <!--                 </li> -->
+        <!--             {% else %} -->
+        <!--                 <li class="nav-item"> -->
+        <!--                     <a href="{{ url_for("users.login") }}" -->
+        <!--                        class="nav-link" -->
+        <!--                        aria-current="page">Sign In</a> -->
+        <!--                 </li> -->
+        <!--                 <li class="nav-item"> -->
+        <!--                     <a href="{{ url_for("users.register") }}" -->
+        <!--                        class="nav-link" -->
+        <!--                        aria-current="page">Sign Up</a> -->
+        <!--                 </li> -->
+        <!--             {% endif %} -->
+        <!--         </ul> -->
+        <!--     </header> -->
+        <!-- </div> -->
+        {% include "top_navigation.html" %}
         {% block flash %}
             <div class="container">
                 {% for category, message in get_flashed_messages(with_categories=True) %}
@@ -53,12 +59,6 @@
         {% endblock content %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-                crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-                integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
                 crossorigin="anonymous"></script>
     </body>
 </html>
