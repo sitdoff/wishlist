@@ -20,7 +20,8 @@ def login():
 
         if user and check_password_hash(user.password, password):
             login_user(user)
-            return redirect(url_for("wishlist.main"))
+            next = request.host_url[:-1] + (request.args.get("next") or "/")
+            return redirect(next)
         else:
             flash("Wrong email or password. Please try again", "alert alert-danger")
             return redirect(url_for("users.login"))
