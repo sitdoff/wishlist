@@ -1,4 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, url_for
+from flask_login import current_user
+from sqlalchemy import desc
 
 from application.forms.forms import ItemForm
 
@@ -11,7 +13,11 @@ bp = Blueprint("wishlist", __name__, url_prefix="/wishlist")
 @bp.route("/")
 def main():
     items = (
-        db.session.execute(db.select(ItemModel).order_by(ItemModel.name))
+        db.session.execute(
+            db.select(ItemModel)
+            .filter_by(user_id=current_user.id)
+            .order_by(desc(ItemModel.id))
+        )
         .scalars()
         .all()
     )
@@ -26,6 +32,7 @@ def add():
             url=request.form["url"],
             price=request.form["price"],
             description=request.form["description"],
+            user_id=current_user.id,
         )
         db.session.add(item)
         db.session.commit()
