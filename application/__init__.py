@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
 
+from .api import routes as api_routes
 from .db import db
 from .users import routes as users_routes
 from .users.models import UserModel
@@ -20,6 +21,7 @@ def create_app():
 
     app.register_blueprint(wishlist_routes.bp)
     app.register_blueprint(users_routes.bp)
+    app.register_blueprint(api_routes.bp)
 
     db.init_app(app)
 
