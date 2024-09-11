@@ -5,9 +5,9 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 
 from .db import db
-from .users import users
+from .users import routes as users_routes
 from .users.models import UserModel
-from .wishlist import wishlist
+from .wishlist import routes as wishlist_routes
 
 env = Env()
 env.read_env()
@@ -17,8 +17,8 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(env("APP_SETTINGS"))
 
-    app.register_blueprint(wishlist.bp)
-    app.register_blueprint(users.bp)
+    app.register_blueprint(wishlist_routes.bp)
+    app.register_blueprint(users_routes.bp)
 
     db.init_app(app)
 
