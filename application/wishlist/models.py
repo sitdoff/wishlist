@@ -17,3 +17,13 @@ class ItemModel(db.Model):
 
     def __repr__(self):
         return f"<ItemModel({self.id=} - {self.name=} - {self.price=})>"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "url": self.url,
+            "price": self.price,
+            "description": self.description,
+            "user_id": self.user_id,
+        }
