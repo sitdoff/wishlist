@@ -1,4 +1,3 @@
-from flask import Blueprint
 from flask import Blueprint, request
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -24,9 +23,24 @@ def register():
             )
             db.session.add(user)
             db.session.commit()
-            return {"success": "User successfully created"}
+            return {"success": "User successfully created"}, 201
 
         except IntegrityError:
-            return {"error": "User with that email already exists"}
+            return {"error": "User with that email already exists"}, 409
 
-    return {"error": "Email and password are required"}
+    return {"error": "Email and password are required"}, 400
+
+
+@bp.route("auth/login/", methods=["POST"])
+def login():
+    pass
+
+
+@bp.route("items/", methods=["GET", "POST"])
+def all_items():
+    pass
+
+
+@bp.route("items/<int:item_id>/", methods=["GET", "PATCH", "DELETE"])
+def item(item_id):
+    pass
