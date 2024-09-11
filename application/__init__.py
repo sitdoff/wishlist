@@ -3,6 +3,7 @@ from flask import Flask, redirect, render_template, url_for
 from flask.logging import create_logger
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_wtf import CSRFProtect
 
 from .db import db
 from .users import routes as users_routes
@@ -23,6 +24,8 @@ def create_app():
     db.init_app(app)
 
     migrate = Migrate(app, db)
+
+    csrf = CSRFProtect(app)
 
     login_manager = LoginManager()
     login_manager.init_app(app)
