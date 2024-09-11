@@ -1,6 +1,7 @@
 from environs import Env
 from flask import Flask, redirect, render_template, url_for
 from flask.logging import create_logger
+from flask_jwt_extended import JWTManager
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
@@ -28,6 +29,9 @@ def create_app():
     migrate = Migrate(app, db)
 
     csrf = CSRFProtect(app)
+    csrf.exempt(api_routes.bp)
+
+    jwt = JWTManager(app)
 
     login_manager = LoginManager()
     login_manager.init_app(app)
