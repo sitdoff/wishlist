@@ -10,7 +10,7 @@ from .models import UserModel
 bp = Blueprint("users", __name__, url_prefix="/auth")
 
 
-@bp.route("/login", methods=["GET", "POST"])
+@bp.route("/login/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -29,7 +29,7 @@ def login():
     return render_template("login.html", form=form)
 
 
-@bp.route("/register", methods=["GET", "POST"])
+@bp.route("/register/", methods=["GET", "POST"])
 def register():
     form = RegisterForm()
 
@@ -51,7 +51,7 @@ def register():
     return render_template("register.html", form=form)
 
 
-@bp.route("/logout")
+@bp.route("/logout/")
 def logout():
     logout_user()
     return redirect(url_for("users.login"))
