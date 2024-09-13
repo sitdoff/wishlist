@@ -33,7 +33,13 @@ def register():
 
 @bp.route("auth/login/", methods=["POST"])
 def login():
-    pass
+    email = request.json.get("email")
+    password = request.json.get("password")
+    user = UserModel.query.filter_by(email=email).first()
+    if user and check_password_hash(user.password, password):
+        token = create_access_token(identity=email)
+        return {"access_token": token}, 200
+    return {"error": "Wrong email or password"}, 401
 
 
 @bp.route("items/", methods=["GET", "POST"])
