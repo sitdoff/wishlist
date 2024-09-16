@@ -38,8 +38,8 @@ def login():
     email = request.json.get("email")
     password = request.json.get("password")
     user = UserModel.query.filter_by(email=email).first()
-    if user and check_password_hash(user.password, password):
-        token = create_access_token(identity=email)
+    if user and user.check_password(password):
+        token = create_access_token(identity=user)
         return {"access_token": token}, 200
     return {"error": "Wrong email or password"}, 401
 
