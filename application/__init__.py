@@ -33,6 +33,14 @@ def create_app():
 
     jwt = JWTManager(app)
 
+    @jwt.user_identity_loader
+    def user_identity_lookup(user: UserModel):
+        return user.email
+
+    @jwt.user_lookup_loader
+    def user_lookup_callback(_jwt_header, jwt_data):
+        return UserModel.query.filter_by(email=jwt_data["sub"]).one_or_none()
+
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = "users.login"

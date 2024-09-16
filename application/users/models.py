@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from werkzeug.security import check_password_hash
 
 from ..db import db
 
@@ -16,3 +17,6 @@ class UserModel(db.Model, UserMixin):
 
     def __repr__(self):
         return f"<UserModel({self.id=} - email={self.email=})>"
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
