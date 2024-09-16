@@ -1,4 +1,6 @@
-from sqlalchemy import ForeignKey
+from decimal import Decimal
+
+from sqlalchemy import ForeignKey, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..db import db
@@ -9,7 +11,7 @@ class ItemModel(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column()
     url: Mapped[str] = mapped_column()
-    price: Mapped[str] = mapped_column()
+    price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     description: Mapped[str] = mapped_column()
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), name="user_id")
 
@@ -23,7 +25,7 @@ class ItemModel(db.Model):
             "id": self.id,
             "name": self.name,
             "url": self.url,
-            "price": self.price,
+            "price": float(self.price),
             "description": self.description,
             "user_id": self.user_id,
         }
