@@ -66,14 +66,13 @@ def all_items():
             return {"error": f"Empty fields: {', '.join(empty_fields)}"}, 400
 
         try:
-            user = UserModel.query.filter_by(email=get_jwt_identity()).first()
-            item = ItemModel(**item_data, user_id=user.id)
+            item = ItemModel(**item_data, user_id=current_user.id)
             db.session.add(item)
             db.session.commit()
             return {"success": "Item created", "item": item.to_dict()}, 201
-        except Exception as e:
+        except SQLAlchemyError as e:
             return {"error": str(e)}, 400
-    items = UserModel.query.filter_by(email=get_jwt_identity()).first().items
+    items = UserModel.query.filter_by(email=current_user.email).first().items
     return [item.to_dict() for item in items]
 
 
