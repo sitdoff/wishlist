@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-from flask_jwt_extended import (create_access_token, get_jwt_identity,
-                                jwt_required)
+from flask_jwt_extended import (create_access_token, current_user,
+                                get_jwt_identity, jwt_required)
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError, StatementError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from ..db import db
@@ -78,5 +78,33 @@ def all_items():
 
 
 @bp.route("items/<int:item_id>/", methods=["GET", "PATCH", "DELETE"])
+@jwt_required()
 def item(item_id):
-    pass
+    item = ItemModel.query.filter_by(id=item_id).first()
+    if item is None:
+        return {"error": "Item not found"}, 404
+
+    if item and item.user_id != current_user.id:
+        return {"error": "You can only edit your own items"}, 403
+
+    if request.method == "PATCH":
+        allowed_fields = ("name", "url", "price", "description")
+        data = request.get_json()
+        try:
+            for key, value in data.items():
+                if key in allowed_fields:
+                    setattr(item, key, value)
+            db.session.commit()
+            return {"success": "Item updated", "item": item.to_dict()}, 200
+        except StatementError as e:
+            return {"error": f"Invalid data '{key}': '{value}'"}, 400
+
+    if request.method == "DELETE":
+        try:
+            db.session.delete(item)
+            db.session.commit()
+            return {"success": "Item deleted"}, 200
+        except SQLAlchemyError as e:
+            return {"error": str(e)}, 400
+
+    return item.to_dict()
