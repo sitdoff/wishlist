@@ -1,0 +1,417 @@
+openapi: 3.0.0
+info:
+  title: Wishlist API
+  description: API для взаимодействия с приложением Wishlist
+  version: 1.0.0
+paths:
+  /api/auth/register/:
+    post:
+      summary: Регистрация нового пользователя
+      operationId: registerUser
+      tags:
+        - Authentication
+      requestBody:
+        description: Данные для регистрации нового пользователя
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "strong_password"
+      responses:
+        "201":
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: "User successfully created"
+        "400":
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Email and password are required"
+        "409":
+          description: Пользователь с таким email уже существует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User with that email already exists"
+  /api/auth/login/:
+    post:
+      summary: Авторизация пользователя
+      operationId: loginUser
+      tags:
+        - Authentication
+      requestBody:
+        description: Данные для авторизации пользователя
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "strong_password"
+      responses:
+        "200":
+          description: Успешная авторизация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+        "401":
+          description: Неверные email или пароль
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Wrong email or password"
+  /api/items/:
+    get:
+      summary: Получить список всех items текущего пользователя
+      operationId: getAllItems
+      tags:
+        - Items
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Успешный ответ с массивом items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+    post:
+      summary: Создать новый item
+      operationId: createItem
+      tags:
+        - Items
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Данные для создания нового item
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - url
+                - price
+                - description
+              properties:
+                name:
+                  type: string
+                  example: "Item name"
+                url:
+                  type: string
+                  example: "http://example.com"
+                price:
+                  type: number
+                  format: float
+                  example: 100.0
+                description:
+                  type: string
+                  example: "Description of the item"
+      responses:
+        "201":
+          description: Item успешно создан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: "Item created"
+                  item:
+                    $ref: "#/components/schemas/Item"
+        "400":
+          description: Ошибка валидации или другие ошибки
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Item data is required"
+              examples:
+                MissingItemData:
+                  summary: Отсутствуют данные item
+                  value:
+                    error: "Item data is required"
+                MissingFields:
+                  summary: Отсутствуют обязательные поля
+                  value:
+                    error: "Missing required fields: name, url, price, description"
+                EmptyFields:
+                  summary: Некоторые поля пусты
+                  value:
+                    error: "Empty fields: name, price"
+                DatabaseError:
+                  summary: Ошибка при записи в базу данных
+                  value:
+                    error: "Database error message"
+  /api/items/{item_id}/:
+    get:
+      summary: Получить данные конкретного item по ID
+      operationId: getItemById
+      tags:
+        - Items
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID item
+      responses:
+        "200":
+          description: Успешный ответ с данными item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "403":
+          description: Доступ к item запрещен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "You can only edit your own items"
+        "404":
+          description: Item не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Item not found"
+    patch:
+      summary: Обновить данные item
+      operationId: updateItem
+      tags:
+        - Items
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID item
+      requestBody:
+        description: Данные для обновления item
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Updated item name"
+                url:
+                  type: string
+                  example: "http://new-url.com"
+                price:
+                  type: number
+                  format: float
+                  example: 150.0
+                description:
+                  type: string
+                  example: "Updated description"
+      responses:
+        "200":
+          description: Успешное обновление item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: "Item updated"
+                  item:
+                    $ref: "#/components/schemas/Item"
+        "400":
+          description: Неверные данные
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid data 'price': 'invalid_value'"
+        "403":
+          description: Доступ к item запрещен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "You can only edit your own items"
+        "404":
+          description: Item не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Item not found"
+    delete:
+      summary: Удалить item
+      operationId: deleteItem
+      tags:
+        - Items
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID item
+      responses:
+        "200":
+          description: Успешное удаление item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: "Item deleted"
+        "400":
+          description: Ошибка удаления
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Database error message"
+        "403":
+          description: Доступ к item запрещен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "You can only edit your own items"
+        "404":
+          description: Item не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Item not found"
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          example: "Item name"
+        url:
+          type: string
+          example: "http://example.com"
+        price:
+          type: number
+          format: float
+          example: 100.0
+        description:
+          type: string
+          example: "Description of the item"
+        user_id:
+          type: integer
+          format: int64
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

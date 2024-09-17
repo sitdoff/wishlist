@@ -8,6 +8,7 @@ from flask_wtf import CSRFProtect
 
 from .api import routes as api_routes
 from .db import db
+from .swagger.config import swagger_blueprint
 from .users import routes as users_routes
 from .users.models import UserModel
 from .wishlist import routes as wishlist_routes
@@ -23,6 +24,7 @@ def create_app():
     app.register_blueprint(wishlist_routes.bp)
     app.register_blueprint(users_routes.bp)
     app.register_blueprint(api_routes.bp)
+    app.register_blueprint(swagger_blueprint)
 
     db.init_app(app)
 
