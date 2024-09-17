@@ -4,7 +4,7 @@ info:
   description: API для взаимодействия с приложением Wishlist
   version: 1.0.0
 paths:
-  /api/auth/register/:
+  /api/auth/users/:
     post:
       summary: Регистрация нового пользователя
       operationId: registerUser
@@ -60,7 +60,7 @@ paths:
                   error:
                     type: string
                     example: "User with that email already exists"
-  /api/auth/login/:
+  /api/auth/token/:
     post:
       summary: Авторизация пользователя
       operationId: loginUser

@@ -12,7 +12,7 @@ from ..wishlist.models import ItemModel
 bp = Blueprint("api", __name__, url_prefix="/api")
 
 
-@bp.route("auth/register/", methods=["POST"])
+@bp.route("auth/users/", methods=["POST"])
 def register():
     email = request.json.get("email")
     password = request.json.get("password")
@@ -33,7 +33,7 @@ def register():
     return {"error": "Email and password are required"}, 400
 
 
-@bp.route("auth/login/", methods=["POST"])
+@bp.route("auth/token/", methods=["POST"])
 def login():
     email = request.json.get("email")
     password = request.json.get("password")
