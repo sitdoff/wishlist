@@ -12,4 +12,4 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 RUN flask --app application db upgrade
 
-CMD ["python", "-m", "flask", "--app", "application", "run", "--host=0.0.0.0", "--port=8000"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "application:app"]
