@@ -7,6 +7,7 @@
 - Язык: python3.12
 - Фреймворк: Flask + SQLAlchemy
 - База данных: sqlite
+- Web-сервер: gunicorn
 - Контейнеризация: Docker
 - Фронт: Bootstrap 5
 
@@ -27,6 +28,8 @@
 
 ## Локальный запуск приложения
 
+Для команд запуска есть короткие алиасы для make в Makefile.
+
 ### С использованием Docker
 
 1. Склонировать репозиторий
@@ -43,8 +46,9 @@ cd wishlist
 
 3. Запустить сборку и запуск контейра
 
-```
+```bash
 docker build --tag=sitdoff/wishlist . && docker run -it -p 8000:8000 sitdoff/wishlist
+# make build
 ```
 
 4. Приложение будет доступно по http://localhost:8000
@@ -68,5 +72,6 @@ cd wishlist
 5. Запустить приложение командой
 
 ```bash
-flask --app application.main run
+gunicorn -w 4 -b 0.0.0.0:8000 application:app
+# make gunicorn
 ```
